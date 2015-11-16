@@ -1,12 +1,8 @@
 <?php
 // getting the categories
 
-$con = mysqli_connect("localhost","root","","ecommerce");
-
-
 function getCats(){
     global $con;
-
     $get_cats = "select * from categories";
     $run_cats = mysqli_query($con,$get_cats);
 
@@ -15,7 +11,6 @@ function getCats(){
         $cat_title = $row_cats['cat_title'];
     echo "<li><a href='#'>$cat_title</a></li>";
     }
-
 }
 
 function getBrands(){
