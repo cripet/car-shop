@@ -11,20 +11,19 @@ include '../includes/db.php';
 
 </head>
 <body bgcolor="#87ceeb">
-
     <form action="insert_product.php" method="post" enctype="multipart/form-data">
-        <table align="center" width="600px" bgcolor="orange" border="2">
+        <table align="center" width="700px" bgcolor="orange" border="2">
             <tr align="center">
                 <td colspan="7"><h2>Insert New Post Here</h2></td>
             </tr>
             <tr>
                 <td align="right"><b>Product Title:</b></td>
-                <td><input type="text" name="product_title"></td>
+                <td><input type="text" name="product_title" size="60" required></td>
             </tr>
             <tr>
                 <td align="right"><b>Product Category:</b></td>
                 <td>
-                   <select name="product_cat" >
+                   <select name="product_cat"   >
                         <option>Select a category</option>
                        <?php
                        $get_cats = "select * from categories";
@@ -36,16 +35,15 @@ include '../includes/db.php';
                            echo "<option value='$cat_id'>$cat_title</option>";
                        }
                        ?>
-
                    </select>
-
                 </td>
             </tr>
+
             <tr>
                 <td align="right"><b>Product Brand:</b></td>
                 <td>
 
-                    <select name="product_cat" >
+                    <select name="product_brand"   >
                         <option>Select a brand</option>
                         <?php
                         $get_brands = "select * from brands";
@@ -63,24 +61,53 @@ include '../includes/db.php';
             </tr>
             <tr>
                 <td align="right"><b>Product Image:</b></td>
-                <td><input type="file" name="product_image"></td>
+                <td><input type="file" name="product_image"  ></td>
             </tr>
             <tr>
                 <td align="right"><b>Product Price:</b></td>
-                <td><input type="text" name="product_price"></td>
+                <td><input type="text" name="product_price"  ></td>
             </tr>
             <tr>
                 <td align="right"><b>Product Description:</b></td>
-                <td><textarea name="product_desc" cols="20" rows="10"></textarea> </td>
+                <td><textarea name="product_desc" cols="20" rows="10"  ></textarea> </td>
             </tr>
             <tr>
                 <td align="right"><b>Product Keywords:</b></td>
-                <td><input type="text" name="product_keywords"></td>
+                <td><input type="text" name="product_keywords" size="50"  ></td>
             </tr>
             <tr align="center">
-                 <td colspan="7"><input type="submit" name="insert_post" value="Insert Now"></td>
+                 <td colspan="7"><input type="submit" name="insert_post" value="Insert Product Now" ></td>
             </tr>
         </table>
     </form>
 </body>
 </html>
+
+<?php
+
+if (isset($_POST['insert_post'])) {
+    $product_title = $_POST['product_title'];
+    $product_cat = $_POST['product_cat'];
+    $product_brand = $_POST['product_brand'];
+    $product_price = $_POST['product_price'];
+    $product_desc = $_POST['product_desc'];
+    $product_keywords = $_POST['product_keywords'];
+
+    //getting the image from the field
+    $product_image = $_FILES['product_image']['name'];
+    $product_image_tmp = $_FILES['product_image']['tmp_name'];
+
+    move_uploaded_file($product_image_tmp,"product_images/$product_image");
+
+    // inserting product in db
+    $insert_product = "insert into products (product_cat, product_brand,product_title,product_price,product_desc, product_image,product_keywords) VALUES
+  ('$product_cat','$product_brand','$product_title','$product_price','$product_desc','$product_image','$product_keywords')";
+
+
+    $insert_pro = mysqli_query($con,$insert_product);
+
+    if ($insert_pro) {
+        echo "<script>alert('Product has been inserted')</script>";
+        echo "<script>window.open('insert_product.php','_self')</script>";
+    }
+}
